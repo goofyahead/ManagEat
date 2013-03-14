@@ -1,13 +1,21 @@
 package es.nxtlink.manageat.utils;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
+import es.nxtlink.manageat.roboguice.ManageatApplication;
+
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 public class Connectivity {
 
@@ -34,7 +42,7 @@ public class Connectivity {
 			StringBuilder total = new StringBuilder();
 			String line;
 			while ((line = r.readLine()) != null) {
-			    total.append(line);
+				total.append(line);
 			}
 			return new String(total);
 		} finally {
@@ -43,8 +51,36 @@ public class Connectivity {
 			}
 		}
 	}
-	
-	public static void getImageFromUrlAndSave (String myUrl){
-		
+
+	public static void getFileFromUrlAndSave(String myUrl, String fileName) {
+		InputStream input = null;
+		OutputStream output = null;
+
+		try {
+			int count;
+			URL url = new URL(myUrl);
+			URLConnection conection = url.openConnection();
+			conection.connect();
+			// input stream to read file - with 8k buffer
+			input = new BufferedInputStream(url.openStream(), 8192);
+			// Output stream to write file
+			output = ManageatApplication.getContext().openFileOutput(fileName, Context.MODE_PRIVATE);
+			byte data[] = new byte[1024];
+			while ((count = input.read(data)) != -1) {
+				output.write(data, 0, count);
+			}
+			// flushing output
+			output.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// closing streams
+				input.close();
+				output.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

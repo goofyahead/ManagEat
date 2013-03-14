@@ -16,12 +16,26 @@ public final class R {
     public static final class drawable {
         public static final int ic_action_search=0x7f020000;
         public static final int ic_launcher=0x7f020001;
+        public static final int tataki=0x7f020002;
     }
     public static final class id {
-        public static final int menu_settings=0x7f080000;
+        public static final int description=0x7f080006;
+        public static final int dishGridView=0x7f080000;
+        public static final int dishImage=0x7f080001;
+        public static final int dishName=0x7f080002;
+        public static final int dishPrice=0x7f080003;
+        public static final int dishTitle=0x7f080005;
+        public static final int dishprice=0x7f080007;
+        public static final int fragment1=0x7f080009;
+        public static final int fragmentContainer=0x7f080008;
+        public static final int menu_settings=0x7f08000a;
+        public static final int videoViewer=0x7f080004;
     }
     public static final class layout {
-        public static final int activity_home=0x7f030000;
+        public static final int dish_grid_view=0x7f030000;
+        public static final int dish_list_cell=0x7f030001;
+        public static final int dish_view_fragment=0x7f030002;
+        public static final int home_activity=0x7f030003;
     }
     public static final class menu {
         public static final int activity_home=0x7f070000;

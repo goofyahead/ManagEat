@@ -1,26 +1,21 @@
 package es.nxtlink.manageat.activities;
 
-import roboguice.activity.RoboActivity;
-
-import com.google.inject.Inject;
-
+import roboguice.activity.RoboFragmentActivity;
 import es.nxtlink.manageat.R;
-import es.nxtlink.manageat.api.ManagEatApiInterface;
-import android.os.AsyncTask;
+import es.nxtlink.manageat.fragments.DishBigViewFragment;
+import es.nxtlink.manageat.fragments.DishGridViewFragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 
-public class HomeActivity extends RoboActivity {
-	@Inject
-	private ManagEatApiInterface api;
-
+public class HomeActivity extends RoboFragmentActivity implements DishGridViewFragment.OnDishSelectedListener{
+	private static final String TAG = HomeActivity.class.getName();
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_home);
-		if (api.checkForUpdates()) {
-			new DownloadMenu().execute();
-		}
+		setContentView(R.layout.home_activity);
 	}
 
 	@Override
@@ -29,15 +24,15 @@ public class HomeActivity extends RoboActivity {
 		return true;
 	}
 
-	private class DownloadMenu extends AsyncTask<Void, Void, Void> {
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			api.updateCategories();
-			api.updateIngredients();
-			api.updateTags();
-			api.updateCurrentMenu();
-			return null;
-		}
+	@Override
+	public void onDishSelected(String id) {
+		//add new fragment in mobile on tablet change target for big view
+		Log.d(TAG, "clicked on dish " + id);
+		DishBigViewFragment viewFragment = DishBigViewFragment.newInstance(id);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+	    ft.replace(R.id.fragmentContainer, viewFragment);
+	    ft.addToBackStack(DishBigViewFragment.TAG);
+	    ft.commit();
 	}
+
 }

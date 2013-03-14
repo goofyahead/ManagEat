@@ -1,17 +1,20 @@
 package es.nxtlink.manageat.api;
 
+import es.nxtlink.manageat.interfaces.ProgressInterface;
+
 public interface ManagEatApiInterface {
 
 	/**
 	 * Updates current menu from server
+	 * @param progress 
 	 */
-	void updateCurrentMenu();
+	void updateCurrentMenu(ProgressInterface progress);
 	
-	void updateTags();
+	void updateTags(ProgressInterface progress);
 	
-	void updateCategories();
+	void updateCategories(ProgressInterface progress);
 	
-	void updateIngredients();
+	void updateIngredients(ProgressInterface progress);
 	
 	boolean checkForUpdates();
 }
