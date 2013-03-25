@@ -9,15 +9,15 @@ import es.nxtlink.manageat.models.*;
 public class DataHelper {
 
 	private static final String TAG = DataHelper.class.getName();
+	private DbHelper openHelper;
 
-	private SQLiteDatabase db;
 
 	public DataHelper(Context context) {
-		DbHelper openHelper = new DbHelper(context);
-		db = openHelper.getWritableDatabase();
+		openHelper = new DbHelper(context);
 	}
 
 	public void saveDish(Dish dish) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.DISH_ID, dish.getId());
 		values.put(DbHelper.DISH_NAME, dish.getName());
@@ -27,67 +27,84 @@ public class DataHelper {
 		values.put(DbHelper.DISH_PRICE, dish.getPrice());
 		values.put(DbHelper.DISH_DEMO, dish.isDemo());
 		db.insert(DbHelper.TABLE_NAME_DISHES, null, values);
+		db.close();
 	}
 
 	public void saveTag(Tag currentTag) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.TAG_ID, currentTag.getId());
 		values.put(DbHelper.TAG_NAME, currentTag.getName());
 		values.put(DbHelper.TAG_DESCRIPTION, currentTag.getDescription());
 		db.insert(DbHelper.TABLE_TAGS_NAME, null, values);
+		db.close();
 	}
 
 	public void saveCategory(Category currentCategory) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.CATEGORY_ID, currentCategory.getId());
 		values.put(DbHelper.CATEGORY_NAME, currentCategory.getName());
 		values.put(DbHelper.CATEGORY_DESCRIPTION,
 				currentCategory.getDescription());
 		db.insert(DbHelper.TABLE_CATEGORIES_NAME, null, values);
+		db.close();
 	}
 
 	public void saveIngredient(Ingredient currentIngredient) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.INGREDIENT_ID, currentIngredient.getId());
 		values.put(DbHelper.INGREDIENT_NAME, currentIngredient.getName());
 		values.put(DbHelper.INGREDIENT_DESCRIPTION,
 				currentIngredient.getDescription());
 		db.insert(DbHelper.TABLE_INGREDIENTS_NAME, null, values);
+		db.close();
 	}
 
 	public void saveRelation(String id, String related) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.RELATION_ID_A, id);
 		values.put(DbHelper.RELATION_ID_B, related);
 		db.insert(DbHelper.TABLE_NAME_RELATIONS, null, values);		
+		db.close();
 	}
 
 	public void saveRelatedCategory(String id, String categoryId) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.RELATION_CAT_DISH_ID, id);
 		values.put(DbHelper.RELATION_CAT_ID, categoryId);
 		db.insert(DbHelper.TABLE_NAME_RELATED_CATEGORIES, null, values);
+		db.close();
 	}
 
 	public void saveRelatedTag(String id, String tagId) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.RELATION_TAG_DISH_ID, id);
 		values.put(DbHelper.RELATION_TAG_ID, tagId);
 		db.insert(DbHelper.TABLE_NAME_RELATED_TAGS, null, values);
+		db.close();
 	}
 
 	public void saveRelatedIngredient(String id, String ingredientId) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(DbHelper.RELATION_INGREDIENT_DISH_ID, id);
 		values.put(DbHelper.RELATION_INGREDIENT_ID, ingredientId);
 		db.insert(DbHelper.TABLE_NAME_RELATED_INGREDIENTS, null, values);
+		db.close();
 	}
 	
 	public Cursor getDishCursor () {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
 		return db.query(DbHelper.TABLE_NAME_DISHES, null, null, null, null, null, DbHelper.DISH_NAME + " ASC");
 	}
 	
 	public Cursor getDishCursor (String selection, String args) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
 		final String SELECTION = selection + "=?";
 	    final String[] SELECTION_ARGS = {args};
 		return db.query(DbHelper.TABLE_NAME_DISHES, null, SELECTION, SELECTION_ARGS, null, null, DbHelper.DISH_NAME + " ASC");
@@ -107,10 +124,8 @@ public class DataHelper {
 			 String id = cursor.getString(cursor.getColumnIndex(DbHelper.DISH_ID));
 			 String image = cursor.getString(cursor.getColumnIndex(DbHelper.DISH_IMAGE));
 			 boolean demo = cursor.getInt(cursor.getColumnIndex(DbHelper.DISH_DEMO)) == 0 ? false : true;
-			 
 			 searchedDish = new Dish(id, name, description, price, image, video, demo);
 		 }
-		
 		cursor.close();
 		return searchedDish;
 	}

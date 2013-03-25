@@ -37,6 +37,7 @@ public class ManagEatApi implements ManagEatApiInterface {
 	private static String GET_TAGS_URL = API_URL + TAGS;
 	private static String INGREDIENTS = "ingredients";
 	private static String GET_INGREDIENTS_URL = API_URL + INGREDIENTS;
+	private static boolean firstUpdate = true;
 
 	@Override
 	public void updateCurrentMenu(ProgressInterface progress) {
@@ -62,7 +63,7 @@ public class ManagEatApi implements ManagEatApiInterface {
 				Dish currentDish = new Dish(jsonDish.getString("_id"),
 						jsonDish.getString("name"),
 						jsonDish.getString("description"),
-						jsonDish.getLong("price"),
+						(float) jsonDish.getDouble("price"),
 						jsonDish.getString("picture"),
 						jsonDish.getString("video"),
 						jsonDish.getBoolean("demo"));
@@ -206,6 +207,12 @@ public class ManagEatApi implements ManagEatApiInterface {
 
 	@Override
 	public boolean checkForUpdates() {
-		return true;
+		if (firstUpdate) {
+			firstUpdate = false;
+			return true;
+		} else {
+			return false;
+		}
+		
 	}
 }

@@ -64,7 +64,7 @@ public class Connectivity {
 			// input stream to read file - with 8k buffer
 			input = new BufferedInputStream(url.openStream(), 8192);
 			// Output stream to write file
-			output = ManageatApplication.getContext().openFileOutput(fileName, Context.MODE_PRIVATE);
+			output = ManageatApplication.getContext().openFileOutput(fileName, Context.MODE_WORLD_READABLE);
 			byte data[] = new byte[1024];
 			while ((count = input.read(data)) != -1) {
 				output.write(data, 0, count);

@@ -1,6 +1,8 @@
 package es.nxtlink.manageat.adapters;
 
 import java.io.File;
+import java.lang.ref.SoftReference;
+import java.util.HashMap;
 
 import es.nxtlink.manageat.R;
 import es.nxtlink.manageat.db.DbHelper;
@@ -19,19 +21,27 @@ import android.widget.TextView;
 public class DishCursorAdapter extends CursorAdapter {
 	private final LayoutInflater inflater;
 	private Context mContext;
-	private final int imageColumIndex;
-	private final int nameColumnIndex;
-	private final int priceColumnIndex;
-	private final int indexColumnIndex;
+	private int imageColumIndex;
+	private int nameColumnIndex;
+	private int priceColumnIndex;
+	private int indexColumnIndex;
+	private HashMap<String, SoftReference<Bitmap>> imageCache = new HashMap<String, SoftReference<Bitmap>>();
 
-	public DishCursorAdapter(Context context, Cursor c) {
-		super(context, c);
+	public DishCursorAdapter(Context context) {
+		super(context, null, false);
 		mContext = context;
 		inflater = LayoutInflater.from(context);
-		indexColumnIndex = c.getColumnIndex(DbHelper.DISH_ID);
-		imageColumIndex = c.getColumnIndex(DbHelper.DISH_IMAGE);
-		nameColumnIndex = c.getColumnIndex(DbHelper.DISH_NAME);
-		priceColumnIndex = c.getColumnIndex(DbHelper.DISH_PRICE);
+	}
+
+	@Override
+	public void changeCursor(Cursor cursor) {
+		super.changeCursor(cursor);
+		if (cursor != null) {
+			indexColumnIndex = cursor.getColumnIndex(DbHelper.DISH_ID);
+			imageColumIndex = cursor.getColumnIndex(DbHelper.DISH_IMAGE);
+			nameColumnIndex = cursor.getColumnIndex(DbHelper.DISH_NAME);
+			priceColumnIndex = cursor.getColumnIndex(DbHelper.DISH_PRICE);
+		}
 	}
 
 	@Override
@@ -39,11 +49,16 @@ public class DishCursorAdapter extends CursorAdapter {
 		ViewHolder holder = (ViewHolder) view.getTag();
 		setImage(holder, cursor.getString(imageColumIndex));
 		holder.dishName.setText(cursor.getString(nameColumnIndex));
-		holder.dishPrice.setText(cursor.getString(priceColumnIndex));
+		holder.dishPrice.setText(cursor.getFloat(priceColumnIndex) +  " €");
 	}
 
 	private void setImage(ViewHolder holder, String nameFile) {
-		new LoadImageOnCell(nameFile, holder).execute();
+		SoftReference<Bitmap> reference = imageCache.get(nameFile);
+		if (reference == null) {
+			new LoadImageOnCell(nameFile, holder).execute();
+		} else {
+			holder.dishImage.setImageBitmap(reference.get());
+		}
 	}
 
 	@Override
@@ -56,7 +71,6 @@ public class DishCursorAdapter extends CursorAdapter {
 		created.setTag(holder);
 		return created;
 	}
-
 
 	@Override
 	public String getItem(int position) {
@@ -87,6 +101,7 @@ public class DishCursorAdapter extends CursorAdapter {
 		protected Void doInBackground(Void... params) {
 			final File path = mContext.getFileStreamPath(nameFile);
 			myImage = BitmapFactory.decodeFile(path.getPath(), null);
+			imageCache.put(nameFile, new SoftReference<Bitmap>(myImage));
 			return null;
 		}
 

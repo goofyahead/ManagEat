@@ -11,8 +11,7 @@ public class DbHelper extends SQLiteOpenHelper{
 	private static final int DATABASE_VERSION = 1;
 	
 	public static final String TABLE_NAME_DISHES = "DISHES_TABLE";
-	public static final String ID = "_id";
-	public static final String DISH_ID = "DISH_ID";
+	public static final String DISH_ID = "_id";
 	public static final String DISH_NAME = "DISH_NAME";
 	public static final String DISH_DESCRIPTION = "DISH_DESCRIPTION";
 	public static final String DISH_IMAGE = "DISH_IMAGE";
@@ -37,7 +36,8 @@ public class DbHelper extends SQLiteOpenHelper{
 	public static final String RELATION_INGREDIENT_ID = "RELATION_INGREDIENT_ID";
 
 	public static final String TABLE_CATEGORIES_NAME = "CATEGORIES_TABLE";
-	public static final String CATEGORY_ID = "CATEGORY_ID";
+	public static final String TABLE_CATEGORIES_JOIN_DISHES = "CATEGORIES_JOIN_DISHES";
+	public static final String CATEGORY_ID = "_id";
 	public static final String CATEGORY_NAME = "CATEGORY_NAME";
 	public static final String CATEGORY_DESCRIPTION = "CATEGORY_DESCRIPTION";
 
@@ -53,8 +53,7 @@ public class DbHelper extends SQLiteOpenHelper{
 
 	public static final String CREATE_DISHES = "CREATE TABLE "
             + TABLE_NAME_DISHES + " ("
-            + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + DISH_ID + " TEXT, "
+            + DISH_ID + " TEXT PRIMARY KEY, "
             + DISH_NAME + " TEXT, "
             + DISH_DESCRIPTION + " TEXT, "
             + DISH_IMAGE + " TEXT, "

@@ -4,11 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/fragmentContainer"
+    <ListView
+        android:id="@+id/categories_view_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-    </RelativeLayout>
+        android:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>
